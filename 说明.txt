@@ -1,0 +1,24 @@
+程序运行流程：
+运行feature_extraction.py提取特征-->运行feture_choose.py提取最终特征-->运行parameter_tuning.py选择最佳模型参数	|——>运行model_evaluation中的程序检验模型效果（需要先运行Idependent_test.py）
+		|
+		|——>运行model_training.py使用所有数据训练并保存模型
+
+Data：
+训练数据
+	其中A1B1_cdhit.fa，A2B2_cdhit.fa，A3B3_cdhit.fa分别对应检测出来的三个可信程度的数据，在实验中都作为正样本，Neg_cdhit.fa对应未标记的半管氨酸位点数据，在实验中都作为未标记样本。Pos_PSSM，Neg_PSSM分别代表正样本和未标记样本对应的PSSM矩阵
+
+feature_extraction.py:
+特征提取程序，生成的结果保存在Feature目录下的pssmFeature和posFeature中，matrixTransformer.py为其要使用的函数程序，用于PSSM矩阵的变形和预处理
+
+feature_choose.py:
+特征子集生成文件，在生成特征子集的过程中，对PSSM特征的的特征重要性评分，评分结果保存在feature——importances中
+
+parameter_tuning.py:
+调整biased_SVM参数的程序
+
+model_training.py：
+使用所有数据训练biased_SVM模型并保存训练好的模型的程序
+
+model_evaluation：
+模型评估程序
+	其中5-CV.py是五折交叉验证，Independent_test.py是独立数据集验证并生成了测试集的评分保存在SVMscores，model_pr_roc.py是生成模型的ROC曲线和PR曲线的95%可信度的范围，但是需要SVM对测试集数据的评分，也就是说要先运行Independent_test.py生成测试集评分后才能运行model_pr_roc.py。其余文件model_pr.py，model_roc.py是分别生成PR曲线和ROC曲线的函数程序，semisup_metrics是model_pr.py，model_roc.py会调用的函数程序。
